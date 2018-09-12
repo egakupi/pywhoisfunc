@@ -14,5 +14,18 @@ drweb.net
 drweb.de
 """
 
-domain = whois.query('drweb.com')
-print(domain.__dict__)
+
+def pywhoisfunc(domain):
+    try:
+        domain_struct = whois.query(domain, ignore_returncode=1)
+        if not domain_struct.__dict__['creation_date']:
+            return False
+        else:
+            result = [domain_struct.__dict__['creation_date'].timetuple()]
+            if domain_struct.__dict__['name_servers']:
+                result.append(domain_struct.__dict__['name_servers'])
+            if domain_struct.__dict__['registrar']:
+                result.append(domain_struct.__dict__['registrar'])
+            return result
+    except:
+        return False
